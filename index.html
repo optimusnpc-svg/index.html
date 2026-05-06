@@ -12,29 +12,29 @@
             --secondary: #06b6d4;
             --success: #22c55e;
             --danger: #ef4444;
-            --bg: linear-gradient(135deg, #eef2ff, #f0fdfa);
         }
 
         body {
             font-family: 'Segoe UI', sans-serif;
-            background: var(--bg);
+            background: linear-gradient(135deg, #667eea, #764ba2);
             display: flex;
             flex-direction: column;
             align-items: center;
             padding: 10px;
             margin: 0;
+            transition: 0.3s;
         }
 
         .container {
             background: white;
             padding: 20px;
             border-radius: 18px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
             width: 100%;
             max-width: 450px;
             text-align: center;
             box-sizing: border-box;
-            border: 1px solid #eee;
+            transition: 0.3s;
         }
 
         h2 {
@@ -56,21 +56,19 @@
             border-radius: 10px;
             font-weight: bold;
             min-height: 24px;
-            transition: 0.3s;
-            border: 1px solid transparent;
         }
 
-        .success { background: #d4edda; color: #155724; border-color: #c3e6cb; }
-        .warning { background: #fff3cd; color: #856404; border-color: #ffeeba; }
-        .cooldown { background: #e2e3e5; color: #383d41; border-color: #d6d8db; }
+        .success { background: #d4edda; color: #155724; }
+        .warning { background: #fff3cd; color: #856404; }
+        .cooldown { background: #e2e3e5; color: #383d41; }
 
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 15px;
             font-size: 14px;
-            overflow: hidden;
             border-radius: 10px;
+            overflow: hidden;
         }
 
         th {
@@ -97,6 +95,25 @@
             margin-bottom: 10px;
         }
 
+        button {
+            cursor: pointer;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+        }
+
+        .theme-btn {
+            background: #111827;
+            color: white;
+            margin-bottom: 10px;
+        }
+
         .admin-controls {
             display: none;
             margin-top: 20px;
@@ -112,26 +129,12 @@
             justify-content: center;
         }
 
-        button {
-            cursor: pointer;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 8px;
-            font-weight: bold;
-            transition: 0.2s;
-        }
-
-        button:hover {
-            transform: scale(1.05);
-            opacity: 0.9;
-        }
-
-        .btn-export { background: var(--success); color: white; }
-        .btn-clear { background: var(--danger); color: white; }
+        .btn-export { background: #22c55e; color: white; }
+        .btn-clear { background: #ef4444; color: white; }
 
         .btn-admin {
             background: none;
-            color: #999;
+            color: #fff;
             margin-top: 20px;
             font-size: 11px;
             text-decoration: underline;
@@ -139,11 +142,48 @@
 
         .btn-delete {
             background: none;
-            color: var(--danger);
-            border: 1px solid var(--danger);
+            color: #ef4444;
+            border: 1px solid #ef4444;
             padding: 2px 6px;
             font-size: 10px;
             border-radius: 4px;
+        }
+
+        /* 🌙 DARK MODE */
+        body.dark {
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+        }
+
+        body.dark .container {
+            background: #111827;
+            color: white;
+        }
+
+        body.dark h2 {
+            color: white;
+        }
+
+        body.dark table td {
+            color: #e5e7eb;
+        }
+
+        body.dark th {
+            background: linear-gradient(135deg, #334155, #0ea5e9);
+        }
+
+        body.dark .status-box.success {
+            background: #14532d;
+            color: #86efac;
+        }
+
+        body.dark .status-box.warning {
+            background: #3b2f0b;
+            color: #fde68a;
+        }
+
+        body.dark .status-box.cooldown {
+            background: #1f2937;
+            color: #d1d5db;
         }
     </style>
 </head>
@@ -151,7 +191,11 @@
 <body>
 
 <div class="container">
+
     <h2>Attendance System</h2>
+
+    <!-- 🌙 DARK MODE BUTTON -->
+    <button class="theme-btn" onclick="toggleTheme()">🌙 Toggle Dark Mode</button>
 
     <div id="reader"></div>
 
@@ -170,7 +214,7 @@
         <tbody id="logBody"></tbody>
     </table>
 
-    <div id="adminPanel" class="admin-controls">
+    <div class="admin-controls" id="adminPanel">
         <div class="button-group">
             <button class="btn-export" onclick="exportToCSV()">Export Excel</button>
             <button class="btn-clear" onclick="clearAll()">Clear All</button>
@@ -182,11 +226,11 @@
 
 <script>
     const studentDatabase = {
-        "1001": "Nabeel 9f",
-        "1002": "Ayaan 5f",
-        "1003": "Ayesha 1b",
-        "1004": "Rojammal 12d",
-        "1005": "Sugaibudeen 12d"
+        "001": "Nabeel 9f",
+        "002": "Ayaan 5f",
+        "003": "Ayesha 1b",
+        "004": "Rojammal 12d",
+        "005": "Sugaibudeen 12d"
     };
 
     let lastScannedId = null;
@@ -194,13 +238,20 @@
     const SPAM_COOLDOWN = 5000;
     let isAdmin = false;
 
+    function toggleTheme() {
+        document.body.classList.toggle("dark");
+
+        if (document.body.classList.contains("dark")) {
+            localStorage.setItem("theme", "dark");
+        } else {
+            localStorage.setItem("theme", "light");
+        }
+    }
+
     function manualInput() {
         const id = prompt("Enter Student ID:");
-        if (id && studentDatabase[id]) {
-            processLog(id);
-        } else if (id) {
-            alert("ID not found!");
-        }
+        if (id && studentDatabase[id]) processLog(id);
+        else if (id) alert("ID not found!");
     }
 
     function processLog(id) {
@@ -235,10 +286,6 @@
         statusDiv.className = "status-box success";
 
         renderTable();
-    }
-
-    function onScanSuccess(decodedText) {
-        processLog(decodedText);
     }
 
     function renderTable() {
@@ -295,13 +342,16 @@
         a.click();
     }
 
-    const html5QrcodeScanner = new Html5QrcodeScanner(
-        "reader",
-        { fps: 10, qrbox: 250 }
-    );
+    const html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 10, qrbox: 250 });
+    html5QrcodeScanner.render((text) => processLog(text));
 
-    html5QrcodeScanner.render(onScanSuccess);
-    window.onload = renderTable;
+    window.onload = function () {
+        renderTable();
+
+        if (localStorage.getItem("theme") === "dark") {
+            document.body.classList.add("dark");
+        }
+    };
 </script>
 
 </body>
