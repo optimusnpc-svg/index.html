@@ -181,6 +181,12 @@
 </div>
 
 <script>
+    function speakName(name) {
+    const utterance = new SpeechSynthesisUtterance("Welcome, " + name);
+    utterance.rate = 1.2; // Slightly faster for quick entry
+    window.speechSynthesis.speak(utterance);
+}
+
     const studentDatabase = {
         "1001": "Nabeel 9f",
         "1002": "Ayaan 5f",
