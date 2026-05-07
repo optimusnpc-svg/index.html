@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>School Attendance System</title>
-    <script src="https://unpkg.com/html5-qrcode"></script>
+    <script src="https://unpkg.com"></script>
 
     <style>
         :root {
@@ -12,301 +12,116 @@
             --secondary: #06b6d4;
             --success: #22c55e;
             --danger: #ef4444;
+            --bg: linear-gradient(135deg, #eef2ff, #f0fdfa);
         }
 
-        body {
-            font-family: 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 10px;
-            margin: 0;
-            transition: 0.3s;
-        }
-
-        .container {
-            background: white;
-            padding: 20px;
-            border-radius: 18px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-            width: 100%;
-            max-width: 450px;
-            text-align: center;
-            box-sizing: border-box;
-            transition: 0.3s;
-        }
-
-        h2 {
-            margin-bottom: 10px;
-            color: #111827;
-        }
-
-        #reader {
-            width: 100%;
-            border-radius: 12px;
-            overflow: hidden;
-            background: #000;
-            margin-bottom: 10px;
-        }
-
-        .status-box {
-            margin: 15px 0;
-            padding: 15px;
-            border-radius: 10px;
-            font-weight: bold;
-            min-height: 24px;
-        }
-
-        .success { background: #d4edda; color: #155724; }
-        .warning { background: #fff3cd; color: #856404; }
-        .cooldown { background: #e2e3e5; color: #383d41; }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-            font-size: 14px;
-            border-radius: 10px;
-            overflow: hidden;
-        }
-
-        th {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            padding: 10px;
-        }
-
-        td {
-            border-bottom: 1px solid #eee;
-            padding: 10px;
-            text-align: left;
-        }
-
-        .btn-manual {
-            background: linear-gradient(135deg, #64748b, #334155);
-            color: white;
-            width: 100%;
-            padding: 12px;
-            border: none;
-            border-radius: 10px;
-            font-weight: bold;
-            cursor: pointer;
-            margin-bottom: 10px;
-        }
-
-        button {
-            cursor: pointer;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 8px;
-            font-weight: bold;
-            transition: 0.2s;
-        }
-
-        button:hover {
-            transform: scale(1.05);
-        }
-
-        .theme-btn {
-            background: #111827;
-            color: white;
-            margin-bottom: 10px;
-        }
-
-        .admin-controls {
-            display: none;
-            margin-top: 20px;
-            flex-direction: column;
-            gap: 10px;
-            border-top: 2px dashed #ddd;
-            padding-top: 15px;
-        }
-
-        .button-group {
-            display: flex;
-            gap: 8px;
-            justify-content: center;
-        }
-
-        .btn-export { background: #22c55e; color: white; }
-        .btn-clear { background: #ef4444; color: white; }
-
-        .btn-admin {
-            background: none;
-            color: #fff;
-            margin-top: 20px;
-            font-size: 11px;
-            text-decoration: underline;
-        }
-
-        .btn-delete {
-            background: none;
-            color: #ef4444;
-            border: 1px solid #ef4444;
-            padding: 2px 6px;
-            font-size: 10px;
-            border-radius: 4px;
-        }
-
-        /* 🌙 DARK MODE */
-        body.dark {
-            background: linear-gradient(135deg, #0f172a, #1e293b);
-        }
-
-        body.dark .container {
-            background: #111827;
-            color: white;
-        }
-
-        body.dark h2 {
-            color: white;
-        }
-
-        body.dark table td {
-            color: #e5e7eb;
-        }
-
-        body.dark th {
-            background: linear-gradient(135deg, #334155, #0ea5e9);
-        }
-
-        body.dark .status-box.success {
-            background: #14532d;
-            color: #86efac;
-        }
-
-        body.dark .status-box.warning {
-            background: #3b2f0b;
-            color: #fde68a;
-        }
-
-        body.dark .status-box.cooldown {
-            background: #1f2937;
-            color: #d1d5db;
-        }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); display: flex; flex-direction: column; align-items: center; padding: 10px; margin: 0; }
+        .container { background: white; padding: 20px; border-radius: 18px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); width: 100%; max-width: 450px; text-align: center; box-sizing: border-box; border: 1px solid #eee; }
+        #reader { width: 100%; border-radius: 12px; overflow: hidden; background: #000; margin-bottom: 10px; }
+        .status-box { margin: 15px 0; padding: 15px; border-radius: 10px; font-weight: bold; min-height: 24px; transition: 0.3s; border: 1px solid transparent; }
+        .success { background: #d4edda; color: #155724; border-color: #c3e6cb; }
+        .warning { background: #fff3cd; color: #856404; border-color: #ffeeba; }
+        .cooldown { background: #e2e3e5; color: #383d41; border-color: #d6d8db; }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 14px; border-radius: 10px; overflow: hidden; }
+        th { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; padding: 10px; }
+        td { border-bottom: 1px solid #eee; padding: 10px; text-align: left; }
+        
+        .tag-late { color: var(--danger); font-weight: bold; font-size: 10px; border: 1px solid var(--danger); padding: 2px 4px; border-radius: 4px; margin-left: 5px; }
+        .admin-controls { display: none; margin-top: 20px; flex-direction: column; gap: 10px; border-top: 2px dashed #ddd; padding-top: 15px; }
+        .btn-manual { background: #64748b; color: white; width: 100%; padding: 12px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; margin-bottom: 10px; }
+        .btn-export { background: var(--success); color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer; }
+        .late-input-group { display: flex; align-items: center; justify-content: space-between; font-size: 12px; margin-bottom: 10px; }
     </style>
 </head>
-
 <body>
 
 <div class="container">
-
     <h2>Attendance System</h2>
-
-    <!-- 🌙 DARK MODE BUTTON -->
-    <button class="theme-btn" onclick="toggleTheme()">🌙 Toggle Dark Mode</button>
-
     <div id="reader"></div>
-
-    <button class="btn-manual" onclick="manualInput()">⌨️ Manual Entry (No QR)</button>
-
+    <button class="btn-manual" onclick="manualInput()">⌨️ Manual Entry</button>
     <div id="status" class="status-box">Ready to Scan...</div>
 
     <table>
-        <thead>
-            <tr>
-                <th>Student</th>
-                <th>Time</th>
-                <th class="admin-col" style="display:none;">Action</th>
-            </tr>
-        </thead>
+        <thead><tr><th>Student</th><th>Time</th><th class="admin-col" style="display:none;">Action</th></tr></thead>
         <tbody id="logBody"></tbody>
     </table>
 
-    <div class="admin-controls" id="adminPanel">
-        <div class="button-group">
-            <button class="btn-export" onclick="exportToCSV()">Export Excel</button>
-            <button class="btn-clear" onclick="clearAll()">Clear All</button>
+    <div id="adminPanel" class="admin-controls">
+        <div class="late-input-group">
+            <label>Late After:</label>
+            <input type="time" id="lateThreshold" value="08:00" onchange="updateLateTime()">
         </div>
+        <button class="btn-export" onclick="exportToCSV()">Export Excel (CSV)</button>
+        <button style="background:var(--danger); color:white; border:none; padding:10px; border-radius:8px;" onclick="clearAll()">Clear All</button>
     </div>
-
-    <button class="btn-admin" onclick="toggleAdmin()">Admin Login</button>
+    <button style="background:none; color:#999; margin-top:20px; font-size:11px; text-decoration:underline; border:none;" onclick="toggleAdmin()">Admin Login</button>
 </div>
 
 <script>
-    const studentDatabase = {
-        "001": "Nabeel 9f",
-        "002": "Ayaan 5f",
-        "003": "Ayesha 1b",
-        "004": "Rojammal 12d",
-        "005": "Sugaibudeen 12d"
-    };
-
-    let lastScannedId = null;
-    let lastScanTime = 0;
-    const SPAM_COOLDOWN = 5000;
+    const studentDatabase = { "1001": "Nabeel 9f", "1002": "Ayaan 5f", "1003": "Ayesha 1b", "1004": "Rojammal 12d", "1005": "Sugaibudeen 12d" };
     let isAdmin = false;
+    let lateTime = localStorage.getItem('late_threshold') || "08:00";
+    document.getElementById('lateThreshold').value = lateTime;
 
-    function toggleTheme() {
-        document.body.classList.toggle("dark");
-
-        if (document.body.classList.contains("dark")) {
-            localStorage.setItem("theme", "dark");
-        } else {
-            localStorage.setItem("theme", "light");
-        }
-    }
-
-    function manualInput() {
-        const id = prompt("Enter Student ID:");
-        if (id && studentDatabase[id]) processLog(id);
-        else if (id) alert("ID not found!");
+    function updateLateTime() {
+        lateTime = document.getElementById('lateThreshold').value;
+        localStorage.setItem('late_threshold', lateTime);
     }
 
     function processLog(id) {
-        const now = Date.now();
-        const statusDiv = document.getElementById('status');
-        const today = new Date().toLocaleDateString();
-
-        if (id === lastScannedId && (now - lastScanTime) < SPAM_COOLDOWN) {
-            statusDiv.innerText = "Wait 5s to log again.";
-            statusDiv.className = "status-box cooldown";
-            return;
-        }
-
+        const now = new Date();
+        const today = now.toLocaleDateString();
+        const currentTimeStr = now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0');
+        
         let attendance = JSON.parse(localStorage.getItem('school_att') || '[]');
-
         if (attendance.find(e => e.id === id && e.date === today)) {
-            statusDiv.innerText = "Already logged today!";
-            statusDiv.className = "status-box warning";
+            showStatus("Already logged today!", "warning");
             return;
         }
 
-        const name = studentDatabase[id] || "Unknown";
-        const time = new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+        const isLate = currentTimeStr > lateTime;
+        const entry = {
+            id, 
+            name: studentDatabase[id] || "Unknown", 
+            time: now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}),
+            date: today,
+            status: isLate ? "LATE" : "PRESENT"
+        };
 
-        attendance.push({ id, name, time, date: today });
+        attendance.push(entry);
         localStorage.setItem('school_att', JSON.stringify(attendance));
-
-        lastScannedId = id;
-        lastScanTime = now;
-
-        statusDiv.innerText = "Welcome, " + name;
-        statusDiv.className = "status-box success";
-
+        showStatus("Welcome, " + entry.name, "success");
         renderTable();
     }
 
     function renderTable() {
         const logBody = document.getElementById('logBody');
         const data = JSON.parse(localStorage.getItem('school_att') || '[]');
+        logBody.innerHTML = data.slice().reverse().map((e, i) => `
+            <tr>
+                <td>${e.name} ${e.status === 'LATE' ? '<span class="tag-late">LATE</span>' : ''}</td>
+                <td>${e.time}</td>
+                <td style="display:${isAdmin ? 'table-cell' : 'none'}">
+                    <button onclick="deleteEntry(${data.length-1-i})">Del</button>
+                </td>
+            </tr>`).join('');
+    }
 
-        document.querySelectorAll('.admin-col').forEach(el =>
-            el.style.display = isAdmin ? 'table-cell' : 'none'
-        );
+    function exportToCSV() {
+        const data = JSON.parse(localStorage.getItem('school_att') || '[]');
+        const csv = "ID,Name,Date,Time,Status\n" + data.map(e => `"${e.id}","${e.name}","${e.date}","${e.time}","${e.status}"`).join("\n");
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `Attendance_${new Date().toLocaleDateString()}.csv`;
+        a.click();
+    }
 
-        logBody.innerHTML = data.slice().reverse().map((entry, index) => {
-            const realIndex = data.length - 1 - index;
-            return `
-                <tr>
-                    <td>${entry.name}</td>
-                    <td>${entry.time}</td>
-                    <td style="display:${isAdmin ? 'table-cell' : 'none'}">
-                        <button class="btn-delete" onclick="deleteEntry(${realIndex})">Del</button>
-                    </td>
-                </tr>`;
-        }).join('');
+    function showStatus(msg, cls) {
+        const s = document.getElementById('status');
+        s.innerText = msg; s.className = "status-box " + cls;
     }
 
     function toggleAdmin() {
@@ -317,42 +132,15 @@
         }
     }
 
-    function deleteEntry(i) {
-        let data = JSON.parse(localStorage.getItem('school_att') || '[]');
-        data.splice(i, 1);
-        localStorage.setItem('school_att', JSON.stringify(data));
-        renderTable();
+    function manualInput() {
+        const id = prompt("Enter Student ID:");
+        if (id && studentDatabase[id]) processLog(id);
+        else if (id) alert("ID not found!");
     }
 
-    function clearAll() {
-        if (confirm("Clear all?")) {
-            localStorage.removeItem('school_att');
-            renderTable();
-        }
-    }
-
-    function exportToCSV() {
-        const data = JSON.parse(localStorage.getItem('school_att') || '[]');
-        let csv = "ID,Name,Date,Time\n" +
-            data.map(e => `"${e.id}","${e.name}","${e.date}","${e.time}"`).join("\n");
-
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
-        a.download = "Attendance.csv";
-        a.click();
-    }
-
-    const html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 10, qrbox: 250 });
-    html5QrcodeScanner.render((text) => processLog(text));
-
-    window.onload = function () {
-        renderTable();
-
-        if (localStorage.getItem("theme") === "dark") {
-            document.body.classList.add("dark");
-        }
-    };
+    const scanner = new Html5QrcodeScanner("reader", { fps: 10, qrbox: 250 });
+    scanner.render(processLog);
+    renderTable();
 </script>
-
 </body>
 </html>
